@@ -40,8 +40,7 @@ sample:
     # When enabled=false, traces log to the console. Comment to send to zipkin
     enabled: false
 ````
-By default zipkin stores message in memory, but you can change this behavior starting
-with this for example with elasticsearch as storage:
+By default zipkin stores messages in memory, but you can change this behavior starting for example with elasticsearch as storage:
 ````shell
 STORAGE_TYPE=elasticsearch ES_HOSTS=URL_TO_ES java -jar zipkin.jar
 ````
