@@ -1,0 +1,32 @@
+<configuration>
+    <springProperty scope="context" name="appName" source="spring.application.name"
+                    defaultValue="mock"/>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <appender name="asyncTasLogKafka"
+              class="net.logstash.logback.appender.LoggingEventAsyncDisruptorAppender">
+        <appender name="kafkaVerboseAppender"
+                  class="com.github.danielwegener.logback.kafka.KafkaAppender">
+            <encoder
+                    class="com.github.danielwegener.logback.kafka.encoding.LayoutKafkaMessageEncoder">
+                <layout class="ch.qos.logback.classic.PatternLayout">
+                    <pattern>${appName}|%d{yyyy-MM-dd HH:mm:ss.SSS}|%-5level|%logger{36}|%msg</pattern>
+                </layout>
+            </encoder>
+            <topic>logging</topic>
+            <keyingStrategy
+                    class="com.github.danielwegener.logback.kafka.keying.RoundRobinKeyingStrategy"/>
+            <deliveryStrategy
+                    class="com.github.danielwegener.logback.kafka.delivery.AsynchronousDeliveryStrategy"/>
+            <producerConfig>bootstrap.servers=localhost:9092</producerConfig>
+            <producerConfig>retries=2</producerConfig>
+        </appender>
+        <appender-ref ref="STDOUT"/>
+    </appender>
+    <root level="info">
+        <appender-ref ref="asyncTasLogKafka"/>
+    </root>
+</configuration>

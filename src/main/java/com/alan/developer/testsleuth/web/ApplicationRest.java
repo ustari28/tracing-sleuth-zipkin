@@ -1,38 +1,38 @@
 package com.alan.developer.testsleuth.web;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.sleuth.SpanName;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import lombok.extern.java.Log;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
+import java.util.Random;
+
+@Log
 @RestController
 @RequestMapping("/web")
 public class ApplicationRest {
 
-    private static Logger log = LoggerFactory.getLogger(ApplicationRest.class);
+    private final Random contandor;
 
-    @Autowired
-    private RestTemplate restTemplate;
+    ApplicationRest() {
+        contandor = new Random(System.currentTimeMillis());
+    }
 
-    @RequestMapping("/home")
-    public String home(){
-        log.info("handling home");
-        testSpan();
+    @GetMapping("/home")
+    public String home() {
+        for (int i = 0; i < contandor.nextInt(1000); i++) {
+            log.info("Welcome");
+            log.severe("No se puede encontrar el home");
+        }
         return "Hello world";
     }
 
-    @SpanName("dummy")
-    void testSpan() {
-        log.info("Dummy");
-    }
-
-    @RequestMapping("/external")
+    @GetMapping("/external")
     public String remoteTest() {
-        log.info("external");
+        for (int i = 0; i < contandor.nextInt(1000); i++) {
+            log.info("Consulta devuelta");
+            log.severe("Servicio no encontrado");
+        }
         return "Ejecución con éxito";
     }
 }
