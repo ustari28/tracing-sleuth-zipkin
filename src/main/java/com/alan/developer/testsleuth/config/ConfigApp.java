@@ -1,6 +1,7 @@
 package com.alan.developer.testsleuth.config;
 
 import brave.sampler.Sampler;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.sleuth.SpanAdjuster;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,13 +9,15 @@ import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class ConfigApp {
-    @Bean
-    public RestTemplate getRestTemplate() {
-        return new RestTemplate();
-    }
+
+    @Value("${spring.application.name}")
+    private String appName;
     @Bean
     SpanAdjuster adjusterOne() {
-        return span -> span.toBuilder().putTag("source", "msrv").build();
+
+        return span -> span.toBuilder()
+                .name(appName)
+                .build();
     }
     @Bean
     public Sampler defaultSampler() {
