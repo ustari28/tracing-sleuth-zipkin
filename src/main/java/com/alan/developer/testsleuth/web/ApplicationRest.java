@@ -13,6 +13,7 @@ import java.util.Random;
 public class ApplicationRest {
 
     private final Random contandor;
+    private final int max = 10000;
 
     ApplicationRest() {
         contandor = new Random(System.currentTimeMillis());
@@ -20,7 +21,7 @@ public class ApplicationRest {
 
     @GetMapping("/home")
     public String home() {
-        for (int i = 0; i < contandor.nextInt(1000); i++) {
+        for (int i = 0; i < contandor.nextInt(max); i++) {
             log.info("Welcome");
             log.severe("No se puede encontrar el home");
         }
@@ -29,7 +30,7 @@ public class ApplicationRest {
 
     @GetMapping("/external")
     public String remoteTest() {
-        for (int i = 0; i < contandor.nextInt(1000); i++) {
+        for (int i = 0; i < contandor.nextInt(max); i++) {
             log.info("Consulta devuelta");
             log.severe("Servicio no encontrado");
         }
